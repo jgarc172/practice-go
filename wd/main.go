@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// program gets and changes the process working directory
 func main() {
 	pwd, err := os.Getwd()
 	if err != nil {
