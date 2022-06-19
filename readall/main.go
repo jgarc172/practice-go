@@ -14,14 +14,14 @@ import (
   $ go run . < in.txt > out.txt
 */
 func main() {
-	readAll(os.Stdin)
+	readAll(os.Stdin, os.Stdout)
 }
 
-func readAll(r io.Reader) {
+func readAll(r io.Reader, w io.Writer) {
 	bytes, err := io.ReadAll(r)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	fmt.Print(string(bytes))
+	fmt.Fprint(w, string(bytes))
 }
