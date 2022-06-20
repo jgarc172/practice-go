@@ -17,5 +17,10 @@ examples with redirection:
  $ cat out.txt
 */
 func main() {
-	io.Copy(os.Stdout, os.Stdin)
+	copy(os.Stdout, os.Stdin)
+}
+
+// copies contents from Reader to Writer
+func copy(w io.Writer, r io.Reader) {
+	io.Copy(w, r)
 }
