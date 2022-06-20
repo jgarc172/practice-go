@@ -1,16 +1,37 @@
 package main
 
 import (
-	"bytes"
+	"io"
+	"strings"
 	"testing"
 )
 
-func TestCountWords(t *testing.T) {
-	b := bytes.NewBufferString("word1 word2 word3")
-	expected := 3
+// tests count(r io.Reader) int
+func TestCount(t *testing.T) {
+	for _, test := range testData() {
+		t.Run(test.name, func(t *testing.T) {
+			got := count(test.input)
+			if got != test.want {
+				t.Errorf("not empty: got '%d' want '%d'", got, test.want)
+			}
+		})
+	}
+}
 
-	got := count(b)
-	if got != expected {
-		t.Errorf("Expected %d, got %d \n", expected, got)
+func newReader(s string) io.Reader {
+	return strings.NewReader(s)
+}
+
+type test struct {
+	name  string
+	input io.Reader
+	want  int
+}
+
+func testData() []test {
+	return []test{
+		{"empty", newReader(""), 0},
+		{"one line", newReader("one two three\n"), 3},
+		{"lines", newReader("one two three\nfour five\n"), 5},
 	}
 }
