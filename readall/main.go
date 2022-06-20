@@ -17,6 +17,8 @@ func main() {
 	readAll(os.Stdin, os.Stdout)
 }
 
+// reads all the input at once
+// and prints it to output
 func readAll(r io.Reader, w io.Writer) {
 	bytes, err := io.ReadAll(r)
 	if err != nil {

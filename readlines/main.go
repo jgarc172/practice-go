@@ -15,18 +15,18 @@ import (
   $ go run . < in.txt > out.txt
 */
 func main() {
-	readLines(os.Stdin)
+	readLines(os.Stdin, os.Stdout)
 }
 
 // reads input line by line
-// and prints it to stdout
-func readLines(r io.Reader) {
+// and prints it to output
+func readLines(r io.Reader, w io.Writer) {
 	br := bufio.NewReader(r)
 	for {
 		line, err := br.ReadString('\n')
 		if err != nil || err == io.EOF {
 			break
 		}
-		fmt.Print(line)
+		fmt.Fprint(w, line)
 	}
 }

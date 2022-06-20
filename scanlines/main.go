@@ -18,6 +18,8 @@ func main() {
 	scanLines(os.Stdin, os.Stdout)
 }
 
+// reads input line by line
+// and prints it to output
 func scanLines(r io.Reader, w io.Writer) {
 	sc := bufio.NewScanner(r)
 	for sc.Scan() {
