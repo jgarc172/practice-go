@@ -18,15 +18,17 @@ import (
   $ go run . < in.txt > out.txt
 */
 func main() {
-	readBytes(os.Stdin)
+	readBytes(os.Stdin, os.Stdout)
 }
 
-func readBytes(r io.Reader) {
+// reads input by 16 bytes
+// and prints it to output
+func readBytes(r io.Reader, w io.Writer) {
 	b := make([]byte, 16)
 	for {
 		n, err := r.Read(b)
 		if n > 0 {
-			fmt.Print(string(b[:n]))
+			fmt.Fprint(w, string(b[:n]))
 		}
 		if err != nil || err == io.EOF {
 			break
