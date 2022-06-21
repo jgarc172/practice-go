@@ -10,27 +10,35 @@ import (
 // TestScanLines tests
 // scanLines(r io.Reader, w io.Writer)
 func TestScanLines(t *testing.T) {
-	want := "line 1\nline 2\n"
-
-	r := newReader(want)
-	w := newWriter()
-	scanLines(r, w)
-	got := w.String()
-
-	if got != want {
-		t.Errorf("Not Empty: got '%s' want '%s'", got, want)
+	for _, test := range testData() {
+		t.Run(test.name, func(t *testing.T) {
+			scanLines(test.input1, test.input2)
+			got := test.input2.String()
+			if got != test.want {
+				t.Errorf("got '%s' want '%s'", got, test.want)
+			}
+		})
 	}
+}
 
-	want = ""
-	r = newReader(want)
-	w = newWriter()
-	scanLines(r, w)
-	got = w.String()
+type test struct {
+	name   string
+	want   string
+	input1 io.Reader
+	input2 *bytes.Buffer
+}
 
-	if got != want {
-		t.Errorf("Empty: got '%s' want '%s'", got, want)
+func testData() []test {
+	want := []string{
+		"",
+		"one two three\n",
+		"one two three\nfour five\n",
 	}
-
+	return []test{
+		{"Empty", want[0], newReader(want[0]), newWriter()},
+		{"Line", want[1], newReader(want[1]), newWriter()},
+		{"Lines", want[2], newReader(want[2]), newWriter()},
+	}
 }
 
 func newReader(s string) io.Reader {

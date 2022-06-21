@@ -12,7 +12,7 @@ func TestCount(t *testing.T) {
 		t.Run(test.name, func(t *testing.T) {
 			got := count(test.input)
 			if got != test.want {
-				t.Errorf("not empty: got '%d' want '%d'", got, test.want)
+				t.Errorf("got '%d' want '%d'", got, test.want)
 			}
 		})
 	}
