@@ -12,7 +12,9 @@ import (
 func TestScanLines(t *testing.T) {
 	for _, test := range testData() {
 		t.Run(test.name, func(t *testing.T) {
+
 			scanLines(test.input1, test.input2)
+
 			got := test.input2.String()
 			if got != test.want {
 				t.Errorf("got '%s' want '%s'", got, test.want)

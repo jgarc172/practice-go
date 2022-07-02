@@ -10,7 +10,9 @@ import (
 func TestCount(t *testing.T) {
 	for _, test := range testData() {
 		t.Run(test.name, func(t *testing.T) {
+
 			got := count(test.input)
+
 			if got != test.want {
 				t.Errorf("got '%d' want '%d'", got, test.want)
 			}
