@@ -7,6 +7,17 @@ import (
 	"os"
 )
 
+/*
+$ go build; ls wc
+wc
+Examples:
+$ ./wc
+hello world
+<Ctrl+D>
+2
+./wc < main.go
+53
+*/
 func main() {
 	fmt.Println(count(os.Stdin))
 }
