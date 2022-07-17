@@ -15,8 +15,10 @@ $ ./wc
 hello world
 <Ctrl+D>
 2
-./wc < main.go
-53
+$ echo "hello world" | ./wc
+2
+$ ./wc < main.go
+61
 */
 func main() {
 	fmt.Println(count(os.Stdin))
