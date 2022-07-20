@@ -1,9 +1,8 @@
 package todo
 
 import (
-	"fmt"
+	"os"
 	"testing"
-	"time"
 )
 
 func TestTodo(t *testing.T) {
@@ -12,6 +11,29 @@ func TestTodo(t *testing.T) {
 
 	t.Run("Add", func(t *testing.T) {
 		tasks.Add(taskName)
+		got := tasks[0].Task
+		if got != taskName {
+			t.Errorf("task is '%v', expected '%v'", got, taskName)
+		}
+	})
+	t.Run("Save and Get", func(t *testing.T) {
+		os.TempDir()
+		tempFile, err := os.CreateTemp("", "")
+		if err != nil {
+			t.Errorf("error creating tempFile '%v'", err)
+		}
+		defer os.Remove(tempFile.Name())
+
+		err = tasks.Save(tempFile.Name())
+
+		if err != nil {
+			t.Fatalf("error saving tasks to file '%v'", err)
+		}
+		tasks = List{}
+		err = tasks.Get(tempFile.Name())
+		if err != nil {
+			t.Fatalf("error getting tasks from file '%'", err)
+		}
 		got := tasks[0].Task
 		if got != taskName {
 			t.Errorf("task is '%v', expected '%v'", got, taskName)
@@ -35,41 +57,4 @@ func TestTodo(t *testing.T) {
 			t.Errorf("length is '%v', expected '%v'", length, 0)
 		}
 	})
-}
-
-type item struct {
-	Task        string
-	Done        bool
-	CreatedAt   time.Time
-	CompletedAt time.Time
-}
-
-type List []item
-
-func (l *List) Add(task string) {
-	t := item{task, false, time.Now(), time.Time{}}
-	*l = append(*l, t)
-}
-
-func (l *List) Complete(item int) (err error) {
-	list := *l
-	index := item - 1
-	if index < 0 || index > (len(list)-1) {
-		err = fmt.Errorf("item '%v' does not exist", item)
-		return
-	}
-	list[index].Done = true
-	list[index].CompletedAt = time.Now()
-	return
-}
-
-func (l *List) Delete(item int) (err error) {
-	list := *l
-	index := item - 1
-	if index < 0 || index > (len(list)-1) {
-		err = fmt.Errorf("item '%v' does not exist", item)
-		return
-	}
-	*l = append(list[:index], list[index+1:]...)
-	return
 }
