@@ -88,3 +88,13 @@ var casesGetNil = []struct {
 	{"not exist", List{}, "notexist.txt", nil},
 	{"exists", List{}, "temp", nil},
 }
+
+func TestSave(t *testing.T) {
+	tasks := List{}
+	tasks.Add("sample task")
+	err := tasks.Save("tasks.txt")
+	if err != nil {
+		t.Error("test save", err)
+	}
+	os.Remove("tasks.txt")
+}
