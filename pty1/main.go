@@ -10,7 +10,7 @@ import (
 
 /*
  go routine --> |---------------------------------------------|
-                | pty-master----Line-Dispcipline-----pty-slave| <-->  cmd
+                | pty-master----Line-Discipline-----pty-slave| <-->  cmd
      Stdout <-- | --------------------------------------------|
 */
 func main() {
