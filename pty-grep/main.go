@@ -10,7 +10,7 @@ import (
 
 /*
  go routine -->Write() |In----------------------------------------Out| Read()
-                       | pty-master----Line-Discipline-----pty-slave | <------> cmd
+                       | pty-master----Line-Discipline-----pty-slave | <------> grep
      Stdout <--Read()  |Out----------------------------------------In| Write()
 
 In  -> Writer, can write to, writable
