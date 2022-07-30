@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -18,6 +19,10 @@ In  -> Writer, can write to, writable
 Out -> Reader, can read from, readable
 */
 func main() {
+	fmt.Println("starting bash . . .")
+	defer func() {
+		fmt.Println(". . . exited bash")
+	}()
 	c := exec.Command("bash")
 	// ptmx is the pty-master
 	ptmx, err := pty.Start(c)
