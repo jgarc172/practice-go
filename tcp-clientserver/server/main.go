@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"net"
 	"os"
 	"os/exec"
@@ -48,41 +49,51 @@ func serveShellConnections(server net.Listener) {
 			fmt.Println("accept error", err)
 			continue
 		}
-		pty, err := startShell("bash")
+		session, err := newSession("bash")
 		if err != nil {
 			fmt.Println("could not start shell", "bash")
 			conn.Close()
 			continue
 		}
-		go attachTerminal(conn, pty)
+		go attachTerminal(conn, session)
 	}
 }
 
-// startShell starts a shell and returns the pseudo Terminal device
-func startShell(cmd string) (ptmx *os.File, err error) {
-	shell := exec.Command(cmd)
-	ptmx, err = pty.Start(shell)
+// newSession starts a shell and returns the pseudo Terminal device
+func newSession(shell string) (s session, err error) {
+	cmd := exec.Command(shell)
+	ptmx, err := pty.Start(cmd)
 	if err != nil {
-		return nil, err
+		return
 	}
-	fmt.Println("shell session started with pid:", shell.Process.Pid)
-	return ptmx, nil
+	s = session{ptmx, cmd.Process.Pid}
+	return
 }
 
 // attachTerminal connects conn and pseudo terminal
 // until connection is closed
-func attachTerminal(conn net.Conn, pty *os.File) {
+func attachTerminal(conn net.Conn, s session) {
 	defer func() {
 		conn.Close()
-		pty.Close()
+		s.Close()
 	}()
+	log.Println("shell session started, pid:", s.pid)
 	fmt.Fprint(conn, "welcome", "\r\n")
 
 	go func() {
-		io.Copy(pty, conn)
+		io.Copy(s.pty, conn)
 	}()
-	io.Copy(conn, pty)
+	io.Copy(conn, s.pty)
 
 	fmt.Fprint(conn, "bye\r\n")
-	fmt.Println("shell session ended")
+	log.Println("shell session ended, pid:", s.pid)
+}
+
+type session struct {
+	pty *os.File
+	pid int
+}
+
+func (s session) Close() {
+	s.pty.Close()
 }
